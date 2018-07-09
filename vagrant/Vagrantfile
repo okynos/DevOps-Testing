@@ -1,28 +1,29 @@
-# -*- mode: ruby -*- 
-# vi: set ft=ruby :
+
+servers=[
+  {
+    :hostname => "agent",
+    :provision => "scriptContainers.yml"
+  },
+  {
+    :hostname => "manager",
+    :provision => "scriptMariaDB.yml"
+  }
+]
+
 Vagrant.configure('2') do |config|
   config.ssh.password = 'root'
   config.ssh.username = 'root'
-
-  config.vm.define machine['Wazuh1'] do |node|
-    config.vm.provider 'docker' do |d|
-      d.build_dir = './'
-      d.name = 'Wazuh'
-      d.expose = [22]
-      d.ports = ['2222:22']
-      d.has_ssh = true
-      d.cmd = ['/usr/sbin/sshd', '-D']
-    end
-  end
-
-  config.vm.define machine['Wazuh1'] do |node|
-    config.vm.provider 'docker' do |d|
-      d.build_dir = './'
-      d.name = 'Wazuh'
-      d.expose = [22]
-      d.ports = ['2222:22']
-      d.has_ssh = true
-      d.cmd = ['/usr/sbin/sshd', '-D']
+  
+  servers.each do |machine|
+    config.vm.define machine[:hostname] do |node|
+      config.vm.provider 'docker' do |d|
+        d.build_dir = './'
+        d.name = machine[:hostname]
+        d.expose = [22]
+        d.ports = ['2222:22']
+        d.has_ssh = true
+        d.cmd = ['/usr/sbin/sshd', '-D']
+      end
     end
   end
 
