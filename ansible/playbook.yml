@@ -2,4 +2,34 @@
 - hosts: all
   tasks:
   - name: Echo Server
-    command: echo "llegue!!!!!!!"
+    command: ping -c 4 10.0.0.10
+
+  - name: Update repository
+    package: name=* state=latest update_cache=yes
+  
+  - name: Install list of packages
+    action: package name="{{ item }}" state=latest update_cache=yes
+    with_items:
+      - git
+      - make
+      - gcc
+      - docker
+      
+  - git:
+      repo: 'https://github.com/okynos/DevOps-Testing.git'
+      dest: '/root'
+      
+  - name: Building Dockerfile
+    docker_image:
+      path: /root/DevOps-Testing/docker
+      name: dockerTest
+      
+      
+  - name: Launch docker container
+    docker:
+      name: TestVagrantAnsible
+      image: dockerTest
+      state: started
+      ports: 
+      - "2222:22"
+    
