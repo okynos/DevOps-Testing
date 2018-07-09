@@ -13,13 +13,11 @@ servers=[
 Vagrant.configure('2') do |config|
   config.ssh.password = 'root'
   config.ssh.username = 'root'
-  config.vm.box = 'centos/7'
   
   servers.each do |machine|
     config.vm.define machine[:hostname] do |node|
-      config.vm.provider 'kvm' do |kvm, override|
-        kvm.memory_size = '256m'
-      end
+      node.vm.box = 'centos/7'
+      node.memory_size = '256m'
     end
   end
 
