@@ -1,0 +1,5 @@
+---
+- hosts: all
+  tasks:
+  - name: Echo Server
+    command: echo "llegue!!!!!!!"

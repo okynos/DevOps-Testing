@@ -1,0 +1,47 @@
+# -*- mode: ruby -*- 
+# vi: set ft=ruby :
+Vagrant.configure('2') do |config|
+  config.ssh.password = 'root'
+  config.ssh.username = 'root'
+
+  config.vm.define machine['Wazuh1'] do |node|
+    config.vm.provider 'docker' do |d|
+      d.build_dir = './'
+      d.name = 'Wazuh'
+      d.expose = [22]
+      d.ports = ['2222:22']
+      d.has_ssh = true
+      d.cmd = ['/usr/sbin/sshd', '-D']
+    end
+  end
+
+  config.vm.define machine['Wazuh1'] do |node|
+    config.vm.provider 'docker' do |d|
+      d.build_dir = './'
+      d.name = 'Wazuh'
+      d.expose = [22]
+      d.ports = ['2222:22']
+      d.has_ssh = true
+      d.cmd = ['/usr/sbin/sshd', '-D']
+    end
+  end
+
+#  config.vm.provider 'docker' do |d|
+#    d.build_dir = './'
+#    d.name = 'Wazuh'
+#    d.expose = [22]
+#    d.ports = ['2222:22']
+#    d.has_ssh = true
+#    d.cmd = ['tail', '-f', '/dev/null']
+#    d.cmd = ['/usr/sbin/sshd', '-D']
+#  end
+
+#  config.vm.provision 'ansible' do |ansible|
+#    ansible.playbook      = 'playbook.yml'
+#    ansible.host_key_checking = false
+#    ansible.become          = true
+#    ansible.verbose = 'vv'
+#  end
+end
+
+
