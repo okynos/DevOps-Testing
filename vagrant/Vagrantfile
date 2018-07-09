@@ -2,27 +2,23 @@
 servers=[
   {
     :hostname => "agent",
-    :provision => "scriptContainers.yml"
+    :provision => "playbook.yml"
   },
   {
     :hostname => "manager",
-    :provision => "scriptMariaDB.yml"
+    :provision => "playbook.yml"
   }
 ]
 
 Vagrant.configure('2') do |config|
   config.ssh.password = 'root'
   config.ssh.username = 'root'
+  config.vm.box = 'centos/7'
   
   servers.each do |machine|
     config.vm.define machine[:hostname] do |node|
-      config.vm.provider 'docker' do |d|
-        d.build_dir = './'
-        d.name = machine[:hostname]
-        d.expose = [22]
-        d.ports = ['2222:22']
-        d.has_ssh = true
-        d.cmd = ['/usr/sbin/sshd', '-D']
+      config.vm.provider 'kvm' do |kvm, override|
+        kvm.memory_size = '256m'
       end
     end
   end
