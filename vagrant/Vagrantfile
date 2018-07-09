@@ -13,11 +13,15 @@ servers=[
 Vagrant.configure('2') do |config|
   config.ssh.password = 'root'
   config.ssh.username = 'root'
+
   
   servers.each do |machine|
     config.vm.define machine[:hostname] do |node|
       node.vm.box = 'centos/7'
-      node.memory = '256m'
+      config.vm.provider 'libvirt' do |domain|
+        domain.memory = 256
+        domain.cpus = 1
+      end
     end
   end
 
