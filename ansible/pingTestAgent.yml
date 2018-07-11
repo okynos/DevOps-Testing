@@ -1,0 +1,9 @@
+---
+- hosts: vagrant_Agent
+  vars:
+    manager_IP: hostvars['vagrant_Agent']['ansible_default_ipv4']['address']
+
+  tasks:
+  - name: Echo Server, Agent => Manager
+    command: ping -c 4 {{ manager_IP }}
+    
