@@ -17,6 +17,8 @@ result = []
 
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
+  config.ssh.private_key_path = "../keys/id_rsaTemp"
+  config.ssh.username = "vagrant"
 
   servers.each do |server|
     config.vm.define server[:hostname] do |node| 
