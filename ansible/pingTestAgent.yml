@@ -1,7 +1,7 @@
 ---
 - hosts: vagrant_Agent
   vars:
-    manager_IP: hostvars['vagrant_Agent']['ansible_default_ipv4']['address']
+    manager_IP: "{{ hostvars['vagrant_Manager']['ansible_host'] }}"
 
   tasks:
   - name: Echo Server, Agent => Manager
