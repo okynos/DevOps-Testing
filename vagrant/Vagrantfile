@@ -1,13 +1,13 @@
 servers=[
   {
     :id => 2,
-    :hostname => "agent",
+    :hostname => "Agent",
     :sshport => "600",
     :address => "192.168.121."
   },
   {
     :id => 3,
-    :hostname => "manager",
+    :hostname => "Manager",
     :sshport => "600",
     :address => "192.168.121."
   }
@@ -18,17 +18,17 @@ result = []
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
 
-  servers.each do |machine|
-    config.vm.define machine[:hostname] do |node| 
+  servers.each do |server|
+    config.vm.define server[:hostname] do |node| 
       config.vm.provider :libvirt do |lv|
         lv.memory = 128
         lv.cpus = 1
       end
-      node.vm.network :private_network, :ip => machine[:address] + machine[:id].to_s
+      node.vm.network :private_network, :ip => server[:address] + server[:id].to_s
     end
     result.push({
-      :IP => machine[:address] + machine[:id].to_s,
-      :hostname => "vagrant_" + machine[:hostname]      
+      :IP => server[:address] + server[:id].to_s,
+      :hostname => "vagrant_" + server[:hostname]      
       })
   end
 
