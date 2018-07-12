@@ -5,6 +5,7 @@ def printParams(pathToKey):
   print("ansible_user=vagrant")
   print("ansible_ssh_private_key_file=" + pathToKey)
   print("ansible_ssh_common_args='-o StrictHostKeyChecking=no'")
+  print("ansible_become=true")
 
 with open(sys.argv[1]) as json_data:
   data = json.load(json_data)
