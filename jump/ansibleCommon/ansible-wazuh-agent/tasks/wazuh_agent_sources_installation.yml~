@@ -12,6 +12,9 @@
     - git
     - make
     - gcc
+    - automake
+    - autoconf
+    - libtool
 
 - name: Clean Wazuh directory if exists
   file:
