@@ -1,3 +1,0 @@
----
-- import_tasks: "wazuh_agent_sources_installation.yml"
-  when: ansible_system == "Linux"

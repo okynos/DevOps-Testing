@@ -1,0 +1,59 @@
+require 'json'
+
+servers=[
+  {
+    :id => 2,
+    :hostname => "Agent",
+    :sshport => "600",
+    :address => "192.168.130.",
+    :box => "centos:7.5.1804",
+    :dockerfile => "./docker/"
+  }#,
+#  {
+#    :id => 3,
+#    :hostname => "Agent",
+#    :sshport => "600",
+#    :address => "192.168.130.",
+#    :box => "centos:7.5.1804",
+#    :dockerfile => "./docker/"
+#  },
+#  {
+#    :id => 4,
+#    :hostname => "Manager",
+#    :sshport => "600",
+#    :address => "192.168.130.",
+#    :box => "centos:7.5.1804",
+#    :dockerfile => "./docker/"
+#  }
+]
+
+result = []
+
+#if !ENV.has_key?("PRIVATE_KEY")
+#  raise "Please specify the `PRIVATE_KEY` environment variable"
+#end
+
+Vagrant.configure("2") do |config|
+  #config.ssh.private_key_path = [ ENV['PRIVATE_KEY'], "~/.vagrant.d/insecure_private_key"]
+  #config.ssh.insert_key = false
+  #config.ssh.username = "vagrant"
+
+  servers.each do |server|
+    config.vm.define 'test' do |node|
+      config.vm.provider :docker do |d|
+        d.build_dir = "./docker/"
+        d.cmd = ['/usr/sbin/sshd', '-D']
+      end
+      node.vm.network :private_network, :ip => server[:address] + server[:id].to_s
+    end
+#    result.push({
+#      :ID => server[:id],
+#      :IP => server[:address] + server[:id].to_s,
+#      :hostname => server[:hostname]      
+#      })
+  end
+  #config.vm.provision "file", source: ENV['PRIVATE_KEY'] + ".pub", destination: "~/.ssh/authorized_keys"
+
+#  File.open("vagrant_result.json", "wb") { |file| file.puts result.to_json }
+
+end
