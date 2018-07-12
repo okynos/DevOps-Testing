@@ -1,0 +1,30 @@
+def routeToTmp = ""
+
+node("vagrant-vm"){
+  stage("STAGE 0 - Setting environment"){
+    git branch: 'master', url: 'https://github.com/okynos/DevOps-Testing.git'
+  }
+
+  stage("STAGE 1 - Deploy Vagrant servers"){
+    routeToTmp = sh( script: "echo `pwd`/tmp", returnStdout: true)
+    sh "mkdir -p $routeToTmp"
+    sh "ssh-keygen -b 2048 -t rsa -f $routeToTmp/id_rsaTmp -q -N ''"
+
+    // En un futuro esta ruta se calculará según los parámetros
+    sh "cd jump/deploy/mv-libvirt/default"
+    sh "VAGRANT_KEY=$routeToTmp/id_rsaTmp vagrant up"
+    sh "cp vagrant_result.json ../../../../tmp/"
+  }
+
+  stage("STAGE 2 - Configure Ansible"){
+    sh "cd ../../../../"
+    sh "mkdir -p $routeToTmp"
+    sh "python utils/JSON2Inventory.py $routeToTmp/vagrant_result.json $routeToTmp/id_rsaTmp"
+    sh "ansible-playbook jump/ansibleCommon/wazuh_agent_sources.yml -i $routeToTmp/inventory"
+    sh "ansible-playbook jump/ansibleCommon/wazuh_manager_sources.yml -i $routeToTmp/inventory"
+  }
+
+  stage("STAGE 3 - Provisioning"){
+    echo "Hi!"
+  }
+}
