@@ -1,8 +1,4 @@
 ---
-- name: install python 2 if doesn't exist
-  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-  when: ansible_os_family == "Debian"
-
 - name: Update repository
   package: name=* state=latest update_cache=yes
 

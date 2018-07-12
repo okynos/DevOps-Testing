@@ -35,7 +35,7 @@
     - 'USER_GENERATE_AUTHD_CERT="y"'
     - 'USER_UPDATE="y"'
     - 'USER_CA_STORE="n"'
-    - 'USER_AGENT_SERVER_IP={{ hostvars[groups.Managers[0]]['ansible_host'] }}'
+    - 'USER_AGENT_SERVER_IP={{wazuh_managers.0.address}}'
 
 - name: Compiling and installing Wazuh (please wait)
   shell: /root/wazuh/install.sh
@@ -53,7 +53,7 @@
     state: started
 
 - name: Registering agent with authd
-  shell: /var/ossec/bin/agent-auth -m {{ hostvars[groups.Managers[0]]['ansible_host'] }}
+  shell: /var/ossec/bin/agent-auth -m {{wazuh_managers.0.address}}
 
 - name: Restarting agent
   service:
