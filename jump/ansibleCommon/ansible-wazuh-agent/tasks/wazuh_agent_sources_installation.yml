@@ -1,0 +1,62 @@
+---
+- name: Update repository
+  package: name=* state=latest update_cache=yes
+
+- name: Install list of packages
+  action: package name="{{ item }}" state=latest update_cache=yes
+  with_items:
+    - git
+    - make
+    - gcc
+
+- name: Clean Wazuh directory if exists
+  file:
+    state: absent
+    path: "/root/wazuh"
+
+- git:
+    repo: 'https://github.com/wazuh/wazuh.git'
+    dest: '/root/wazuh'
+
+- name: Configure unattended installation
+  lineinfile:
+    dest: /root/wazuh/etc/preloaded-vars.conf
+    line: "{{ item }}"
+  with_items:
+    - 'USER_LANGUAGE="en"'
+    - 'USER_NO_STOP="y"'
+    - 'USER_INSTALL_TYPE="agent"'
+    - 'USER_DIR="/var/ossec"'
+    - 'USER_ENABLE_ACTIVE_RESPONSE="y"'
+    - 'USER_ENABLE_SYSCHECK="y"'
+    - 'USER_ENABLE_ROOTCHECK="y"'
+    - 'USER_ENABLE_OPENSCAP="y"'
+    - 'USER_ENABLE_AUTD="y"'
+    - 'USER_GENERATE_AUTHD_CERT="y"'
+    - 'USER_UPDATE="y"'
+    - 'USER_CA_STORE="n"'
+    - 'USER_AGENT_SERVER_IP={{wazuh_managers.0.address}}'
+
+- name: Compiling and installing Wazuh (please wait)
+  shell: /root/wazuh/install.sh
+
+- name: Configure default client.keys
+  lineinfile:
+    dest: /var/ossec/etc/client.keys
+    line: "{{ item }}"
+  with_items:
+    - '001 agent any abcdefghijklmnopqrstuvwxyz'
+
+- name: Starting Wazuh-Agent service
+  service:
+    name: wazuh-agent
+    state: started
+
+- name: Registering agent with authd
+  shell: /var/ossec/bin/agent-auth -m {{wazuh_managers.0.address}}
+
+- name: Restarting agent
+  service:
+    name: wazuh-agent
+    state: restarted
+    
