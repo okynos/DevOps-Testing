@@ -3,11 +3,11 @@
   copy:
     src: "{{ item }}" 
     dest: /var/ossec/tmp
-    with_items:
-      - jump/tests/logcollector/T1_addlog/testfiles/test1AddLog.log
-      - jump/tests/logcollector/T1_addlog/testfiles/test1AddLog.py
-      - jump/tests/logcollector/T1_addlog/testfiles/test1JSONLog.json
-      - jump/tests/logcollector/T1_addlog/testfiles/test1ossec.conf
+  with_items:
+    - ../testfiles/test1AddLog.log
+    - ../testfiles/test1AddLog.py
+    - ../testfiles/test1JSONLog.json
+    - ../testfiles/test1ossec.conf
 
 - name: Append conf to ossec.conf
   command: cat /var/ossec/tmp/Test1ossec.conf >> /var/ossec/etc/ossec.conf
