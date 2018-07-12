@@ -29,5 +29,13 @@ node("vagrant-vm"){
 
   stage("STAGE 4 - Test 1 - LogCollector Add Log"){
     sh "ansible-playbook jump/tests/logcollector/T1_addlog/ansible/test-agent.yml -i $routeToTmp/inventory"
+
+    //sh "ansible-playbook jump/tests/logcollector/T1_addlog/ansible/test-agent.yml -i $routeToTmp/inventory" 
+
+    //sh "sudo cp jump/tests/logcollector/T1_addlog/testfiles/test1AddLog.log /var/ossec/logs/"
+		//sh "sudo sh -c 'cat jenkins-test-files/Test1ossec.conf >> /var/ossec/etc/ossec.conf'"
+		//sh "sudo systemctl restart wazuh-agent"
+		//sh "sudo sh -c 'cat jenkins-test-files/test1AddLog.log >> /var/ossec/logs/test1AddLog.log'"
+    //sh "sudo pytest jenkins-test-files/test1AddLog.py::test_AddLogAgent"
   }
 }

@@ -1,0 +1,4 @@
+Jun 27 14:35:27 localhost sshd[1258]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jun 27 14:35:28 localhost sshd[1259]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jun 27 14:35:29 localhost sshd[1260]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Jun 27 14:35:30 localhost sshd[1261]: pam_unix(sshd:session): session opened for user root by (uid=0)
