@@ -13,7 +13,8 @@ servers=[
     :hostname => "Agent",
     :sshport => "600",
     :address => "192.168.121.",
-    :box => "peru/ubuntu-18.04-server-amd64"
+    :box => "centos/7"
+    #:box => "peru/ubuntu-18.04-server-amd64"
   },
   {
     :id => 4,
@@ -31,7 +32,6 @@ if !ENV.has_key?("PRIVATE_KEY")
 end
 
 Vagrant.configure("2") do |config|
-  #config.vm.box = "centos/7"
   config.ssh.private_key_path = [ ENV['PRIVATE_KEY'], "~/.vagrant.d/insecure_private_key"]
   config.ssh.insert_key = false
   config.ssh.username = "vagrant"
