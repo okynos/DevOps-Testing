@@ -1,5 +1,5 @@
 ---
-- hosts: managerInstance
+- hosts: Managers
   roles:
     - ansible-wazuh-manager
   vars:

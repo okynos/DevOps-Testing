@@ -19,7 +19,7 @@ node("vagrant-vm"){
   }
 
   stage("STAGE 2 - Configure Ansible"){
-    sh "python utils/JSON2Inventory.py $routeToTmp/vagrant_result.json $routeToTmp/id_rsaTmp"
+    sh "python jump/utils/JSON2Inventory.py $routeToTmp/vagrant_result.json $routeToTmp/id_rsaTmp >> $routeToTmp/inventory"
     sh "ansible-playbook jump/ansibleCommon/wazuh_agent_sources.yml -i $routeToTmp/inventory"
     sh "ansible-playbook jump/ansibleCommon/wazuh_manager_sources.yml -i $routeToTmp/inventory"
   }
