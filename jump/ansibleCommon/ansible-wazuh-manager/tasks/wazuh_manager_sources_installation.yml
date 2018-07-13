@@ -68,7 +68,6 @@
     dest: /var/ossec/etc/ossec.conf
     regexp: '<protocol>[a-z]*</protocol>'
     line: '<protocol>tcp</protocol>'
-    backrefs: yes
 
 - name: Adding firewall rule
   firewalld:
