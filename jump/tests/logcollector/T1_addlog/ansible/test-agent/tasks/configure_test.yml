@@ -10,7 +10,7 @@
     - ../testfiles/test1ossec.conf
 
 - name: Append conf to ossec.conf
-  command: cat /var/ossec/tmp/Test1ossec.conf >> /var/ossec/etc/ossec.conf
+  command: cat /var/ossec/tmp/test1ossec.conf >> /var/ossec/etc/ossec.conf
 
 - name: Restarting agent
   service:
