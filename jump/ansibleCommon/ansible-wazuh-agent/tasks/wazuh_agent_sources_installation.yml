@@ -63,6 +63,32 @@
 - name: Compiling and installing Wazuh (please wait)
   shell: /root/wazuh/install.sh
 
+- name: Change communication protocol to TCP
+  lineinfile:
+    dest: /var/ossec/etc/ossec.conf
+    regexp: '<protocol>[a-z]*</protocol>'
+    line: '<protocol>tcp</protocol>'
+    backrefs: yes
+
+- name: Adding firewall rule
+  firewalld:
+    zone: public
+    port: 1514/tcp
+    permanent: true
+    state: enabled
+
+- name: Adding firewall Authd rule
+  firewalld:
+    zone: public
+    port: 1515/tcp
+    permanent: true
+    state: enabled
+    
+- name: Restarting firewall
+  service:
+    name: firewalld
+    state: restarted
+
 - name: Configure default client.keys
   lineinfile:
     dest: /var/ossec/etc/client.keys

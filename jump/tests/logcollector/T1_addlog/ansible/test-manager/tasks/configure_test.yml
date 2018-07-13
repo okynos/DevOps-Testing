@@ -8,6 +8,7 @@
     dest: "{{ item.dest }}"
   with_items:
     - { src: ../testfiles/test1AddLog.py, dest: /test1AddLog/test1AddLog.py }
+    - { src: ../testfiles/test1AddLog.log, dest: /test1AddLog/test1AddLog.log }
 
 - name: Waiting to get Log from Agents
   pause:

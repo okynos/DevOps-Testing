@@ -63,10 +63,17 @@
 - name: Compiling and installing Wazuh (please wait)
   shell: /root/wazuh/install.sh
 
-- name: Adding firewall Manager rule
+- name: Change communication protocol to TCP
+  lineinfile:
+    dest: /var/ossec/etc/ossec.conf
+    regexp: '<protocol>[a-z]*</protocol>'
+    line: '<protocol>tcp</protocol>'
+    backrefs: yes
+
+- name: Adding firewall rule
   firewalld:
     zone: public
-    port: 1514/udp
+    port: 1514/tcp
     permanent: true
     state: enabled
 
