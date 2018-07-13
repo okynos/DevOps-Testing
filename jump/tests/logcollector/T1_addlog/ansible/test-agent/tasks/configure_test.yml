@@ -1,16 +1,20 @@
 ---
+- name: Make new dir to store test
+  file: path=/test1AddLog state=directory
+
 - name: Copy all files to "{{ inventory_host }}"
   copy:
-    src: "{{ item }}" 
-    dest: /var/ossec/tmp
+    src: "{{ item.src }}" 
+    dest: "{{ item.dest }}"
   with_items:
-    - ../testfiles/test1AddLog.log
-    - ../testfiles/test1AddLog.py
-    - ../testfiles/test1JSONLog.json
-    - ../testfiles/test1ossec.conf
+    - { src: ../testfiles/test1AddLog.log, dest: /var/ossec/logs/test1AddLog.log }
+    - { src: ../testfiles/test1AddLog.log, dest: /test1AddLog/test1AddLog.log }
+    - { src: ../testfiles/test1AddLog.py, dest: /test1AddLog/test1AddLog.py }
+    - { src: ../testfiles/test1JSONLog.json, dest: /test1AddLog/test1JSONLog.json }
+    - { src: ../testfiles/test1ossec.conf, dest: /test1AddLog/test1ossec.conf }
 
 - name: Append conf to ossec.conf
-  command: cat /var/ossec/tmp/test1ossec.conf >> /var/ossec/etc/ossec.conf
+  shell: cat /test1AddLog/test1ossec.conf >> /var/ossec/etc/ossec.conf
 
 - name: Restarting agent
   service:
@@ -22,8 +26,8 @@
     seconds: 10
 
 - name: Writing alert to log
-  command: cat /var/ossec/tmp/test1AddLog.log >> /var/ossec/logs/test1AddLog.log
+  shell: cat /test1AddLog/test1AddLog.log >> /var/ossec/logs/test1AddLog.log
 
 - name: Running Test
-  command: pytest /var/ossec/tmp/test1AddLog.py::test_AddLogAgent
+  command: pytest /test1AddLog/test1AddLog.py::test_AddLogAgent
     

@@ -1,86 +1,20 @@
 ---
-- name: install python 2 if doesn't exist
-  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-  when: ansible_os_family == "Debian"
+- name: Make new dir to store test
+  file: path=/test1AddLog state=directory
 
-- name: Changing hostname to "{{ inventory_hostname }}"
-  hostname: 
-    name: "{{ inventory_hostname }}"
-
-- name: Update repository
-  package: name=* state=latest update_cache=yes
-
-- name: Install list of packages
-  action: package name="{{ item }}" state=latest update_cache=yes
+- name: Copy all files to "{{ inventory_host }}"
+  copy:
+    src: "{{ item.src }}" 
+    dest: "{{ item.dest }}"
   with_items:
-    - git
-    - make
-    - gcc
-    - automake
-    - autoconf
-    - libtool
+    - { src: ../testfiles/test1AddLog.py, dest: /test1AddLog/test1AddLog.py }
 
-- name: Clean Wazuh directory if exists
-  file:
-    state: absent
-    path: "/root/wazuh"
+- name: Waiting to get Log from Agents
+  pause:
+    seconds: 10
 
-- git:
-    repo: 'https://github.com/wazuh/wazuh.git'
-    dest: '/root/wazuh'
+- name: Writing alert to log
+  shell: cat /test1AddLog/test1AddLog.log >> /var/ossec/logs/test1AddLog.log
 
-- name: Configure unattended installation
-  lineinfile:
-    dest: /root/wazuh/etc/preloaded-vars.conf
-    line: "{{ item }}"
-  with_items:
-    - 'USER_LANGUAGE="en"'
-    - 'USER_NO_STOP="y"'
-    - 'USER_INSTALL_TYPE="server"'
-    - 'USER_DIR="/var/ossec"'
-    - 'USER_ENABLE_EMAIL="n"'
-    - 'USER_WHITE_LIST="127.0.0.1/24"'
-    - 'USER_ENABLE_SYSCHECK="y"'
-    - 'USER_ENABLE_ROOTCHECK="y"'
-    - 'USER_ENABLE_OPENSCAP="y"'
-    - 'USER_ENABLE_SYSLOG="y"'
-    - 'USER_ENABLE_AUTHD="n"'
-    - 'USER_AUTO_START="y"'
-    - 'USER_UPDATE="n"'
-
-- name: Compiling and installing Wazuh (please wait)
-  shell: /root/wazuh/install.sh
-
-- name: Adding firewall Manager rule
-  firewalld:
-    zone: public
-    port: 1514/udp
-    permanent: true
-    state: enabled
-
-- name: Adding firewall Authd rule
-  firewalld:
-    zone: public
-    port: 1515/tcp
-    permanent: true
-    state: enabled
-    
-- name: Restarting firewall
-  service:
-    name: firewalld
-    state: restarted
-
-- name: Starting wazuh-manager service
-  service:
-    name: wazuh-manager
-    state: started
-
-- name: Generate SSL files for authd
-  command: "openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout sslmanager.key -out sslmanager.cert"
-  args:
-    creates: sslmanager.cert
-    chdir: /var/ossec/etc/
-
-- name: Starting authd
-  shell: /var/ossec/bin/ossec-authd
-    
+- name: Running Test
+  command: pytest /test1AddLog/test1AddLog.py::test_AlertInManager

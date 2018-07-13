@@ -29,5 +29,6 @@ node("vagrant-vm"){
 
   stage("STAGE 4 - Test 1 - LogCollector Add Log"){
     sh "ansible-playbook jump/tests/logcollector/T1_addlog/ansible/test_agent.yml -i $routeToTmp/inventory"
+    sh "ansible-playbook jump/tests/logcollector/T1_addlog/ansible/test_manager.yml -i $routeToTmp/inventory"
   }
 }
