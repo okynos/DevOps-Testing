@@ -20,6 +20,11 @@
     - autoconf
     - libtool
 
+- name: Install Pytest
+  easy_install:
+    name: pytest
+    state: latest
+
 - name: Clean Wazuh directory if exists
   file:
     state: absent
