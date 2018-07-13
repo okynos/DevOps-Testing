@@ -20,10 +20,17 @@
     - autoconf
     - libtool
 
-- name: Install Pytest
-  easy_install:
+- name: Download pip
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /tmp/get-pip.py
+
+- name: Installing pip
+  command: python /tmp/get-pip.py
+
+- name: Installing pytest with pip
+  pip: 
     name: pytest
-    state: latest
 
 - name: Clean Wazuh directory if exists
   file:
