@@ -89,10 +89,10 @@
     name: firewalld
     state: restarted
 
-- name: Starting wazuh-manager service
+- name: Restarting wazuh-manager service
   service:
     name: wazuh-manager
-    state: started
+    state: restarted
 
 - name: Generate SSL files for authd
   command: "openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout sslmanager.key -out sslmanager.cert"
